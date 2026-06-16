@@ -22,6 +22,7 @@ export class TokenStorageService {
   getUser(): AuthResponse | null {
     const raw = this.cookieService.get(this.key);
     if (!raw) return null;
+    
     try {
       return JSON.parse(raw) as AuthResponse;
     } catch {

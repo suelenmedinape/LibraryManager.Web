@@ -20,8 +20,9 @@ export class AuthService {
   login(dto: Auth): Observable<AuthResponse> {
     const response = this.http.post<AuthResponse>(`${this.baseUrl}/login`, dto).pipe(
       tap((response) => {
-        const expiresAt = new Date(response.expiresIn * 1000);
+        const expiresAt = new Date(Date.now() + response.expiresIn * 1000);
         this.tokenService.saveCookie(response, expiresAt);
+        this.redirectUser();
       }),
     );
 
