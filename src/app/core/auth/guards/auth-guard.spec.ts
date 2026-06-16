@@ -1,7 +1,7 @@
 import { signal } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { CanActivateFn, Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
+import { GooeyToastService } from "ngx-gooey-toast";
 import { AuthService } from "@/core/auth/services/auth.service";
 import { authGuard, adminGuard } from "@/core/auth/guards/auth-guard";
 
@@ -92,7 +92,7 @@ describe("adminGuard", () => {
             useValue: mockAuthService({ isAuthenticated: true, role: "Admin" }),
           },
           { provide: Router, useValue: router },
-          { provide: ToastrService, useValue: toastr },
+          { provide: GooeyToastService, useValue: toastr },
         ],
       });
     });
@@ -121,7 +121,7 @@ describe("adminGuard", () => {
             useValue: mockAuthService({ isAuthenticated: true, role: "User", redirectUrl: "/" }),
           },
           { provide: Router, useValue: router },
-          { provide: ToastrService, useValue: toastr },
+          { provide: GooeyToastService, useValue: toastr },
         ],
       });
     });
@@ -132,10 +132,9 @@ describe("adminGuard", () => {
 
     it("exibe toast de aviso de permissão", () => {
       runGuard(adminGuard);
-      expect(toastr.warning).toHaveBeenCalledWith(
-        "Você não tem permissão para acessar essa pagina",
-        "Atenção!",
-      );
+      expect(toastr.warning).toHaveBeenCalledWith("Atenção!", {
+        description: "Você não tem permissão para acessar essa pagina",
+      });
     });
 
     it("redireciona para a rota retornada por redirectUser()", () => {
@@ -157,7 +156,7 @@ describe("adminGuard", () => {
             }),
           },
           { provide: Router, useValue: router },
-          { provide: ToastrService, useValue: toastr },
+          { provide: GooeyToastService, useValue: toastr },
         ],
       });
     });

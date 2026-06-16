@@ -108,8 +108,4 @@ describe("BooksService", () => {
     expect(req.request.method).toBe("GET");
     expect(result).toEqual(fakeBooks);
   });
-
-  it("", () => {});
-
-  /* FINDBYID */
 });

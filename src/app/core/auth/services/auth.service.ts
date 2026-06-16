@@ -1,6 +1,6 @@
 import { computed, inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { environment } from "@/env/environment.development";
+import { environment } from "@/env/environment";
 import { Observable, tap } from "rxjs";
 import { TokenStorageService } from "@/core/auth/services/token-storage.service";
 import { Auth, AuthResponse } from "@/core/auth/models/auth.interface";

@@ -1,7 +1,7 @@
 import { AuthService } from "@/core/auth/services/auth.service";
 import { inject } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
+import { GooeyToastService } from "ngx-gooey-toast";
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -17,11 +17,11 @@ export const authGuard: CanActivateFn = (route, state) => {
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
-  const toastr = inject(ToastrService);
+  const toastr = inject(GooeyToastService);
   const router = inject(Router);
 
   if (authService.isRoleUser() !== "Admin") {
-    toastr.warning("Você não tem permissão para acessar essa pagina", "Atenção!");
+    toastr.warning("Atenção!", { description: "Você não tem permissão para acessar essa pagina" });
     router.navigate([authService.redirectUser()]);
     return false;
   }

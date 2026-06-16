@@ -2,8 +2,8 @@ import { environment } from "@/env/environment";
 import {
   GenreFilter,
   GenreInfoResponse,
-  GenreCreateResponse,
   GenreUpdateRequest,
+  GenreCreateRequest,
 } from "@/features/genres/models/genre.interface";
 import { buildParams } from "@/shared/utils/httpParams";
 import { HttpClient } from "@angular/common/http";
@@ -25,7 +25,7 @@ export class GenreService {
     return this.http.get<GenreInfoResponse>(this.getGenreUrlById(genreId));
   }
 
-  save(dto: GenreCreateResponse): Observable<GenreInfoResponse> {
+  save(dto: GenreCreateRequest): Observable<GenreInfoResponse> {
     return this.http.post<GenreInfoResponse>(this.baseUrl, dto);
   }
 
