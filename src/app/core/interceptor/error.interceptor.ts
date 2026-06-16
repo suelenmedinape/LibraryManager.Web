@@ -23,12 +23,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         );
       }
 
-      if (error.status === 401) {
-        errorMessage = "Session expired. Please log in again.";
-        authService.logout();
-        router.navigate(["/login"]);
-        toastr.warning("Session Expired", { description: errorMessage });
-      } else if (error.status === 403) {
+      if (error.status === 403) {
         errorMessage = "You do not have permission to access this page.";
         router.navigate(["/"]);
         toastr.warning("Access Denied", { description: errorMessage });
