@@ -1,0 +1,46 @@
+// ─────────────────────────────────────────────
+// REUSABLE KEYFRAME ANIMATIONS
+// ─────────────────────────────────────────────
+
+// Efeito de pulsação suave (ex: textos de loading, esqueletos de skeleton screen)
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+// Flutuação vertical suave (ex: mascote cow.svg, ilustrações decorativas)
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Rotação contínua (ex: spinners, loaders circulares)
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Traço dinâmico para loaders circulares em SVG
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}

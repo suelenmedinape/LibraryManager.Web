@@ -1,1 +1,53 @@
-<p>login works!</p>
+<section class="auth-section">
+  <div class="auth-section__container">
+
+    <!-- Logo -->
+    <a routerLink="/" class="auth-section__logo">
+      <img class="auth-section__logo-img" src="/books-logo.svg" alt="Library Logo" />
+    </a>
+
+    <!-- Card Container -->
+    <div class="auth-card">
+      <div class="auth-card__content">
+        <h1 class="auth-card__title">Login</h1>
+
+        <form class="auth-form">
+
+          <!-- Email Field -->
+          <fieldset class="auth-form__group">
+            <legend for="email" class="auth-form__label">E-mail</legend>
+            <input type="email" id="email" [formField]="loginForm.email" 
+            [class.auth-form__invalid]="loginForm.email().touched() && loginForm.email().errors()?.length" 
+            class="auth-form__input" placeholder="name@exemplo.com">
+
+            @if (loginForm.email().touched()) {
+            @for (error of loginForm.email().errors(); track error) {
+            <li class="auth-form__error">{{ error.message }}</li>
+            }
+            }
+          </fieldset>
+
+          <!-- Password Field -->
+          <fieldset class="auth-form__group">
+            <legend for="password" class="auth-form__label">Password</legend>
+            <input type="password" id="password" [formField]="loginForm.password" 
+            [class.auth-form__invalid]="loginForm.password().touched() && loginForm.password().errors()?.length" 
+            class="auth-form__input" placeholder="••••••••">
+
+            @if (loginForm.password().touched()) {
+            @for (error of loginForm.password().errors(); track error) {
+            <li class="auth-form__error">{{ error.message }}</li>
+            }
+            }
+          </fieldset>
+
+          <!-- Submit Button -->
+          <button class="auth-form__submit-btn" (click)="save($event)">
+            Login
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

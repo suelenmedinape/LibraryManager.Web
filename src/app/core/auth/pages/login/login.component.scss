@@ -1,0 +1,183 @@
+@use "variables" as *;
+
+.auth-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  padding: 2rem 1rem;
+  transition: var(--transition-smooth);
+  &__container {
+    width: 100%;
+    max-width: 32rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__logo {
+    display: inline-flex;
+    margin-bottom: 2rem;
+    transition: var(--transition-smooth);
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  &__logo-img {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+.auth-card {
+  width: 100%;
+  max-width: 50rem;
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-smooth);
+  &:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+  &__content {
+    padding: 2.5rem;
+  }
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 2rem;
+    letter-spacing: -0.025em;
+    background: linear-gradient(135deg, var(--text-primary) 40%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  &__group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+  }
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+  &__input {
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    transition: var(--transition-smooth);
+    outline: none;
+    &::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+  }
+  &__invalid {
+    border-color: var(--primary-color);
+  }
+  &__terms {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  &__checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    height: 1.25rem;
+  }
+  &__checkbox {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+    accent-color: var(--primary-color);
+    cursor: pointer;
+  }
+  &__terms-text {
+    margin-left: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  &__terms-label {
+    cursor: pointer;
+    font-weight: 400;
+  }
+  &__error {
+    color: var(--primary-color);
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+  }
+  ::ng-deep &__submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.15);
+    &:hover {
+      background-color: var(--primary-hover);
+      box-shadow: 0 8px 15px rgba(16, 185, 129, 0.25);
+      transform: translateY(-1.5px);
+    }
+    &:active {
+      transform: translateY(0);
+    }
+    &:disabled {
+      background-color: var(--text-muted) !important;
+      opacity: 0.6;
+      cursor: not-allowed !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+  &__link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    &:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+  }
+  &__footer-text {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-weight: 400;
+  }
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
