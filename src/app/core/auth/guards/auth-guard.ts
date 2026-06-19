@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (!authService.isAuthenticated()) {
-    router.navigate(["/login"]);
+    router.navigate(["/"]);
     return false;
   }
 
@@ -20,7 +20,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const toastr = inject(GooeyToastService);
   const router = inject(Router);
 
-  if (authService.isRoleUser() !== "Admin") {
+  if (authService.isRoleUser() !== "ADMIN USER") {
     toastr.warning("Atenção!", { description: "Você não tem permissão para acessar essa pagina" });
     router.navigate([authService.redirectUser()]);
     return false;

@@ -65,9 +65,9 @@ describe("authGuard", () => {
       expect(runGuard(authGuard)).toBe(false);
     });
 
-    it("redireciona para /login", () => {
+    it("redireciona para /", () => {
       runGuard(authGuard);
-      expect(router.navigate).toHaveBeenCalledWith(["/login"]);
+      expect(router.navigate).toHaveBeenCalledWith(["/"]);
     });
   });
 });
@@ -89,7 +89,7 @@ describe("adminGuard", () => {
         providers: [
           {
             provide: AuthService,
-            useValue: mockAuthService({ isAuthenticated: true, role: "Admin" }),
+            useValue: mockAuthService({ isAuthenticated: true, role: "ADMIN USER" }),
           },
           { provide: Router, useValue: router },
           { provide: GooeyToastService, useValue: toastr },

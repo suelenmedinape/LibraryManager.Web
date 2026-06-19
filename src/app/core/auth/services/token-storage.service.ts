@@ -1,5 +1,5 @@
 import { AuthResponse, TokenFormat } from "@/core/auth/models/auth.interface";
-import { environment } from "@/env/environment.development";
+import { environment } from "@/env/environment";
 import { inject, Injectable, signal } from "@angular/core";
 import { jwtDecode } from "jwt-decode";
 import { CookieService } from "ngx-cookie-service";
