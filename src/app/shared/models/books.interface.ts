@@ -1,4 +1,4 @@
-import { GenreBasicResponse } from "@/features/genres/models/genre.interface";
+import { GenreBasicResponse } from "@/shared/models/genre.interface";
 
 export interface Book {
   id: number;

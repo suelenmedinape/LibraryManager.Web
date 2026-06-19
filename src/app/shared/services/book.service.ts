@@ -1,11 +1,5 @@
 import { environment } from "@/env/environment";
-import {
-  BookFilter,
-  BookInfoResponse,
-  BookCreateRequest,
-  BookCreateResponse,
-  BookUpdateRequest,
-} from "@/features/books/models/books.interface";
+import { BookFilter, BookInfoResponse, BookCreateRequest, BookCreateResponse, BookUpdateRequest } from "@/shared/models/books.interface";
 import { buildParams } from "@/shared/utils/httpParams";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";

@@ -1,6 +1,6 @@
-import { Book, BookBasicResponse } from "@/features/books/models/books.interface";
-import { LoanStatus } from "@/features/loans/enums/loan-status";
-import { User, UserBasicResponse } from "@/features/users/models/user.interface";
+import { LoanStatus } from "@/shared/enums/loan-status";
+import { Book, BookBasicResponse } from "@/shared/models/books.interface";
+import { User, UserBasicResponse } from "@/shared/models/user.interface";
 
 export interface Loan {
   id: number;

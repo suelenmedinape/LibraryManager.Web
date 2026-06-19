@@ -1,8 +1,8 @@
 import { TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { BookInfoResponse, BookFilter } from "@/features/books/models/books.interface";
-import { BookService } from "@/features/books/services/book.service";
+import { BookFilter, BookInfoResponse } from "@/shared/models/books.interface";
+import { BookService } from "@/shared/services/book.service";
 
 describe("BooksService", () => {
   let service: BookService;
