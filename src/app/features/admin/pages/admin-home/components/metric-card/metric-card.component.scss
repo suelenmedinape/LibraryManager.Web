@@ -1,0 +1,87 @@
+@use "variables" as *;
+
+// ─────────────────────────────────────────────
+// GRID DO DASHBOARD (l-grid / l-grid--dashboard)
+// ─────────────────────────────────────────────
+
+.l-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+
+  &--dashboard {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+// Utilitários de Margem
+.u-mb-2 {
+  margin-bottom: 2rem;
+}
+
+// ─────────────────────────────────────────────
+// CARDS DE MÉTRICAS (c-card & c-stat)
+// ─────────────────────────────────────────────
+
+.c-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+
+  &--interactive {
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow-hover);
+      border-color: var(--primary-light);
+    }
+  }
+
+  &__stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  &__icon-box {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      stroke: currentColor;
+      fill: none;
+    }
+  }
+}
+
+.c-stat {
+  display: flex;
+  flex-direction: column;
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  &__number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 0.25rem;
+  }
+}

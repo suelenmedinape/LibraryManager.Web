@@ -1,0 +1,95 @@
+@use "variables" as *;
+
+// ─────────────────────────────────────────────
+// TABELA RESPONSIVA E TABELAS (c-table-responsive, c-table)
+// ─────────────────────────────────────────────
+
+.c-table-responsive {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  background-color: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  margin-top: 1.5rem;
+}
+
+.c-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+
+  &__head {
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+
+    th {
+      padding: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-smooth);
+
+    &:hover {
+      background-color: rgba(249, 250, 251, 0.7);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__cell {
+    padding: 1rem;
+    color: var(--text-primary);
+    vertical-align: middle;
+  }
+}
+
+// ─────────────────────────────────────────────
+// BADGES DE STATUS (c-badge)
+// ─────────────────────────────────────────────
+
+.c-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &--success {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+
+  &--danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  &--warning {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  &--info {
+    background-color: #e0f2fe;
+    color: #075985;
+  }
+
+  &--muted {
+    background-color: var(--badge-bg);
+    color: var(--badge-text);
+  }
+}
+
+// Utilitários de Texto
+.u-font-bold {
+  font-weight: 700;
+}

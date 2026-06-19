@@ -1,0 +1,28 @@
+<app-header title="Dashboard Geral" />
+
+<main class="l-app__content">
+
+  <!-- Métricas em Cards -->
+  @if (books.isLoading() || users.isLoading() || loans.isLoading()) {
+  <app-loading [relative]="true" />
+  } @else {
+  <app-metric-card [data]="metrics()" />
+  }
+
+  <!-- Painéis Duplos: Últimos Empréstimos e Gêneros Populares -->
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 2.5rem; flex-wrap: wrap;"
+    class="l-split--wrap">
+
+    <!-- Últimos Empréstimos -->
+    @if (loans.isLoading()) {
+    <app-loading [relative]="true" />
+    } @else {
+    <app-last-loans [data]="lastLoans()" />
+    }
+
+    <!-- Estatísticas por Gênero -->
+    <app-genres-statistics />
+
+  </div>
+
+</main>

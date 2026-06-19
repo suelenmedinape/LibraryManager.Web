@@ -1,0 +1,25 @@
+@use "variables" as *;
+
+// ─────────────────────────────────────────────
+// CONTAINER DO CARD (c-card)
+// ─────────────────────────────────────────────
+
+.c-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+// Utilitários de Texto
+.u-font-bold {
+  font-weight: 700;
+}
+
+.u-text-muted {
+  color: var(--text-muted);
+}

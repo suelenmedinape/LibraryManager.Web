@@ -1,0 +1,31 @@
+<div>
+  <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0 0 0.75rem 0;">Últimos Empréstimos Realizados</h2>
+  <div class="c-table-responsive">
+    <table class="c-table">
+      <thead class="c-table__head">
+        <tr>
+          <th>Leitor</th>
+          <th>Livro</th>
+          <th>Data</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (loan of data(); track loan.id) {
+          <tr class="c-table__row">
+            <td class="c-table__cell u-font-bold">{{ loan.user.fullName }}</td>
+            <td class="c-table__cell">{{ loan.book.title }}</td>
+            <td class="c-table__cell">{{ loan.borrowedAt | date:'dd/MM/yyyy' }}</td>
+            <td class="c-table__cell">
+              <span [class]="'c-badge ' + badgeClass(loan.status)">{{ statusLabel(loan.status) }}</span>
+            </td>
+          </tr>
+        } @empty {
+          <tr class="c-table__row">
+            <td class="c-table__cell" colspan="4">Nenhum empréstimo encontrado</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

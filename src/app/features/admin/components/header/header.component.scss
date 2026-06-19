@@ -1,0 +1,26 @@
+@use "variables" as *;
+
+// ─────────────────────────────────────────────
+// CONTAINER DO CABEÇALHO
+// ─────────────────────────────────────────────
+
+:host {
+  display: contents;
+}
+
+.l-app__header {
+  grid-area: header;
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  z-index: 9;
+  margin: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
+}

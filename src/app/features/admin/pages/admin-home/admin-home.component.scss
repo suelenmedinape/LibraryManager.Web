@@ -1,0 +1,34 @@
+@use "variables" as *;
+
+// ─────────────────────────────────────────────
+// GRID & LAYOUT DO CONTEÚDO
+// ─────────────────────────────────────────────
+:host {
+  display: contents;
+}
+
+.l-app__content {
+  grid-area: content;
+  padding: 2rem;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// ─────────────────────────────────────────────
+// SEÇÃO DO CONTAINER DE DIVISÃO (l-split)
+// ─────────────────────────────────────────────
+
+.l-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
+}
