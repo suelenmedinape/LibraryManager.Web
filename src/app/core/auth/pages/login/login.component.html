@@ -17,7 +17,7 @@
           <fieldset class="auth-form__group">
             <legend for="email" class="auth-form__label">E-mail</legend>
             <input type="email" id="email" [formField]="loginForm.email" 
-            [class.auth-form__invalid]="loginForm.email().touched() && loginForm.email().errors()?.length" 
+            [class.auth-form__invalid]="loginForm.email().touched() && loginForm.email().errors().length" 
             class="auth-form__input" placeholder="name@exemplo.com">
 
             @if (loginForm.email().touched()) {
@@ -31,7 +31,7 @@
           <fieldset class="auth-form__group">
             <legend for="password" class="auth-form__label">Password</legend>
             <input type="password" id="password" [formField]="loginForm.password" 
-            [class.auth-form__invalid]="loginForm.password().touched() && loginForm.password().errors()?.length" 
+            [class.auth-form__invalid]="loginForm.password().touched() && loginForm.password().errors().length" 
             class="auth-form__input" placeholder="••••••••">
 
             @if (loginForm.password().touched()) {

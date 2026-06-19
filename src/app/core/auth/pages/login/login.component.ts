@@ -5,6 +5,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject, signal } from "@angular/core";
 import { form, required, submit, FormField } from "@angular/forms/signals";
 import { Title } from "@angular/platform-browser";
+import { Router } from "@angular/router";
 import { GooeyToastService } from "ngx-gooey-toast";
 
 @Component({
@@ -16,6 +17,7 @@ import { GooeyToastService } from "ngx-gooey-toast";
 export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly toastr = inject(GooeyToastService);
+  private readonly router = inject(Router);
 
   readonly loginModel = signal<Auth>({
     email: "",
@@ -34,6 +36,7 @@ export class LoginComponent {
           next: () => {
             const id = this.toastr.info("Successfully logged in.");
             this.toastr.update(id, { title: "Successfully logged in.", type: "success" });
+            this.router.navigate([this.authService.redirectUser()]);
           },
           error: (error: HttpErrorResponse) => {
             const erro = error.error as DefaultError;
