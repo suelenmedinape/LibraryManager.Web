@@ -1,0 +1,159 @@
+@use "variables" as *;
+
+.error-page {
+  position: relative;
+  isolation: isolate; // Impede que o blur com z-index negativo suma atrás do fundo da página
+
+  // Container geral do blur com efeito blur-3xl
+  &__blur {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -10;
+    transform: translate3d(0, 0, 0); // transform-gpu
+    overflow: hidden;
+    filter: blur(64px);
+
+    &--top {
+      top: -10rem; // -top-40
+
+      @media (min-width: 640px) {
+        top: -20rem; // sm:-top-80
+      }
+    }
+
+    &--bottom {
+      top: calc(100% - 13rem); // top-[calc(100%-13rem)]
+
+      @media (min-width: 640px) {
+        top: calc(100% - 30rem); // sm:top-[calc(100%-30rem)]
+      }
+    }
+  }
+
+  // O formato geométrico do blur (usando sua cor primária)
+  &__blur-shape {
+    position: relative;
+    aspect-ratio: 1155 / 678;
+    width: 36.125rem; // w-144.5
+    transform: translateX(-50%);
+    opacity: 0.4; // Ajustado para suavizar o blur com a cor verde
+    clip-path: polygon(
+      74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 
+      72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 
+      27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%
+    );
+    background-image: linear-gradient(to top right, $color-primary, $color-primary);
+
+    &--top {
+      left: calc(50% - 11rem);
+      transform: translateX(-50%) rotate(30deg);
+
+      @media (min-width: 640px) {
+        left: calc(50% - 30rem);
+        width: 72.1875rem; // sm:w-288.75
+      }
+    }
+
+    &--bottom {
+      left: calc(50% + 3rem);
+
+      @media (min-width: 640px) {
+        left: calc(50% + 36rem);
+        width: 72.1875rem; // sm:w-288.75
+      }
+    }
+  }
+
+  // Seção do Conteúdo
+  &__content {
+    margin-top: 12.5rem; // mt-50
+  }
+
+  &__container {
+    padding: 2rem 1rem; // py-8 px-4
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80rem; // max-w-7xl
+
+    @media (min-width: 1024px) {
+      padding: 4rem 1.5rem; // lg:py-16 lg:px-6
+    }
+  }
+
+  &__wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 40rem; // max-w-screen-sm
+    text-align: center;
+  }
+
+  // Título 404 (usa $primary)
+  &__title {
+    margin-bottom: 1rem;
+    font-size: 4.5rem; // text-7xl
+    line-height: 1;
+    letter-spacing: -0.025em; // tracking-tight
+    font-weight: 800; // font-extrabold
+    color: $color-primary;
+
+    @media (min-width: 1024px) {
+      font-size: 8rem; // lg:text-9xl
+    }
+  }
+
+  // Subtítulo (usa seu verde escuro principal de texto $fg)
+  &__subtitle {
+    margin-bottom: 1rem;
+    font-size: 1.875rem; // text-3xl
+    line-height: 2.25rem;
+    letter-spacing: -0.025em;
+    font-weight: 700; // font-bold
+    color: $color-gray-900;
+
+    @media (min-width: 768px) {
+      font-size: 2.25rem; // md:text-4xl
+      line-height: 2.5rem;
+    }
+  }
+
+  // Descrição (usa seu verde acinzentado de texto secundário $muted-fg)
+  &__description {
+    margin-bottom: 1rem;
+    font-size: 1.125rem; // text-lg
+    line-height: 1.75rem;
+    font-weight: 300; // font-light
+    color: $color-gray-500;
+  }
+
+  // Botão de voltar (usa $primary, darken para hover e $primary-ring para focus)
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background-color: $color-primary;
+    font-weight: 500; // font-medium
+    border-radius: 0.5rem; // rounded-lg
+    font-size: 0.875rem; // text-sm
+    line-height: 1.25rem;
+    padding: 0.625rem 1.25rem; // py-2.5 px-5
+    text-align: center;
+    text-decoration: none;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      background-color: $color-primary-hover; // Escurece levemente o verde primário no hover
+    }
+
+    &:focus {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba($color-primary, 0.3); // Utiliza o seu anel de foco configurado
+    }
+  }
+}

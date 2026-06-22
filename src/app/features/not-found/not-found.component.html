@@ -1,0 +1,26 @@
+<div class="error-page">
+  <!-- Efeito de Blur (Topo) -->
+  <div aria-hidden="true" class="error-page__blur error-page__blur--top">
+    <div class="error-page__blur-shape error-page__blur-shape--top"></div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <section class="error-page__content">
+    <div class="error-page__container">
+      <div class="error-page__wrapper">
+        <h1 class="error-page__title">404</h1>
+        <h2 class="error-page__subtitle">Algo está faltando.</h2>
+        <p class="error-page__description">
+          Desculpe, não conseguimos encontrar essa página. Você encontrará muito conteúdo para explorar na página
+          inicial.
+        </p>
+        <a (click)="redirectTo()" class="error-page__btn">Voltar para a home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Efeito de Blur (Rodapé) -->
+  <div aria-hidden="true" class="error-page__blur error-page__blur--bottom">
+    <div class="error-page__blur-shape error-page__blur-shape--bottom"></div>
+  </div>
+</div>
