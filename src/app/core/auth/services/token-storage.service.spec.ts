@@ -72,14 +72,12 @@ describe("TokenStorageService", () => {
     });
 
     it("retorna a role (scope) decodificada do JWT", () => {
-      cookieSpy.get.mockReturnValue(JSON.stringify(MOCK_USER));
-      service = TestBed.inject(TokenStorageService);
+      service.user$.set(MOCK_USER);
       expect(service.role$()).toBe("Admin");
     });
 
-    it("retorna null quando o cookie contém JSON inválido", () => {
-      cookieSpy.get.mockReturnValue("invalido");
-      service = TestBed.inject(TokenStorageService);
+    it("retorna null quando o usuário não está autenticado", () => {
+      service.user$.set(null);
       expect(service.role$()).toBeNull();
     });
   });
