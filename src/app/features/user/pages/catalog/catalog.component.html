@@ -1,0 +1,49 @@
+<app-header title="Catálogo de Livros" />
+
+<main class="l-app__content">
+  <!-- Filtros -->
+  <section class="c-filter-group">
+    <input
+      type="text"
+      class="c-filter-group__input"
+      placeholder="Buscar por título ou autor..."
+      [value]="searchValue()"
+      (input)="searchValue.set($any($event.target).value)"
+    />
+
+    <select
+      class="c-filter-group__select"
+      [value]="genreFilter()"
+      (change)="genreFilter.set($any($event.target).value)"
+    >
+      <option value="">Todos os Gêneros</option>
+      @for (genre of genres.value() ?? []; track genre.id) {
+        <option [value]="genre.name">{{ genre.name }}</option>
+      }
+    </select>
+
+    @if (searchValue() || genreFilter()) {
+      <button class="c-btn c-btn--ghost" (click)="clear()">Limpar</button>
+    }
+  </section>
+
+  <!-- Grid de Livros -->
+  @if (books.isLoading()) {
+    <app-loading [relative]="true" />
+  } @else if (!books.value()?.length) {
+    <p class="u-text-muted u-text-center" style="margin-top: 3rem;">
+      Nenhum livro encontrado para os filtros aplicados.
+    </p>
+  } @else {
+    <section class="l-grid">
+      @for (book of books.value(); track book.id) {
+        <app-catalog-card [book]="book" (viewDetail)="openDetail($event)" />
+      }
+    </section>
+  }
+</main>
+
+<!-- Modal de Detalhes -->
+@if (selectedBook()) {
+  <app-book-detail-modal [book]="selectedBook()!" (closed)="closeDetail()" />
+}

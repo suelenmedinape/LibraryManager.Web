@@ -1,0 +1,97 @@
+<app-header title="Meus Empréstimos" />
+
+<main class="l-app__content">
+
+  <!-- Stat Cards -->
+  <section class="l-grid l-grid--dashboard u-mb-2">
+    <div class="c-card">
+      <div class="c-stat">
+        <span class="c-stat__label">Empréstimos Ativos</span>
+        <span class="c-stat__number">{{ activeLoans().length }}</span>
+      </div>
+    </div>
+    <div class="c-card" style="border-left: 4px solid var(--primary-color);">
+      <div class="c-stat">
+        <span class="c-stat__label">Livros Atrasados</span>
+        <span class="c-stat__number" style="color: var(--primary-color);">{{ overdueCount() }}</span>
+      </div>
+    </div>
+    <div class="c-card">
+      <div class="c-stat">
+        <span class="c-stat__label">Total Devolvidos</span>
+        <span class="c-stat__number">{{ returnedCount() }}</span>
+      </div>
+    </div>
+  </section>
+
+  @if (history.isLoading()) {
+    <app-loading [relative]="true" />
+  } @else {
+    <!-- Empréstimos Ativos -->
+    <h2 class="loans-section-title">Empréstimos Ativos</h2>
+    <div class="c-table-responsive u-mb-2">
+      <table class="c-table">
+        <thead class="c-table__head">
+          <tr>
+            <th>Livro</th>
+            <th>Autor</th>
+            <th>Data de Empréstimo</th>
+            <th>Data Limite</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (loan of activeLoans(); track loan.id) {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-font-bold">{{ loan.book.title }}</td>
+              <td class="c-table__cell">{{ loan.book.author }}</td>
+              <td class="c-table__cell">{{ loan.borrowedAt | date: 'dd/MM/yyyy' }}</td>
+              <td class="c-table__cell">{{ loan.dueAt | date: 'dd/MM/yyyy' }}</td>
+              <td class="c-table__cell">
+                <span [class]="loan.status | loanStatusBadge">{{ loan.status | loanStatusLabel }}</span>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-text-center" colspan="5">Nenhum empréstimo ativo no momento.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Histórico de Devoluções -->
+    <h2 class="loans-section-title" style="margin-top: 2rem;">Histórico de Devoluções</h2>
+    <div class="c-table-responsive">
+      <table class="c-table">
+        <thead class="c-table__head">
+          <tr>
+            <th>Livro</th>
+            <th>Autor</th>
+            <th>Data de Empréstimo</th>
+            <th>Data de Devolução</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (loan of pastLoans(); track loan.id) {
+            <tr class="c-table__row">
+              <td class="c-table__cell">{{ loan.book.title }}</td>
+              <td class="c-table__cell">{{ loan.book.author }}</td>
+              <td class="c-table__cell">{{ loan.borrowedAt | date: 'dd/MM/yyyy' }}</td>
+              <td class="c-table__cell">{{ loan.returnedAt ? (loan.returnedAt | date: 'dd/MM/yyyy') : '—' }}</td>
+              <td class="c-table__cell">
+                <span [class]="loan.status | loanStatusBadge">{{ loan.status | loanStatusLabel }}</span>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-text-center" colspan="5">Nenhum histórico de devolução ainda.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</main>

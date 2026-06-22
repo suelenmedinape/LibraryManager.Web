@@ -1,0 +1,72 @@
+<app-header title="Meu Perfil" />
+
+<main class="l-app__content">
+  <div style="max-width: 650px; margin: 0 auto;">
+
+    <div class="c-card">
+      <!-- Avatar -->
+      <div class="profile__header">
+        <div class="profile__avatar">
+          {{ form().fullName ? form().fullName?.charAt(0)?.toUpperCase() : '?' }}
+        </div>
+        <div>
+          <h2 class="profile__name">{{ form().fullName || 'Carregando...' }}</h2>
+          <p class="u-text-muted profile__since">Leitor cadastrado no sistema BiblioTech</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form class="c-form" (ngSubmit)="save()">
+
+        <div class="c-form__group">
+          <label class="c-form__label">Nome Completo</label>
+          <input type="text" class="c-form__input"
+            [value]="form().fullName" (input)="updateField('fullName', $any($event.target).value)" required />
+        </div>
+
+        <div class="c-form__row">
+          <div class="c-form__group">
+            <label class="c-form__label">CPF</label>
+            <input type="text" class="c-form__input profile__readonly"
+              [value]="form().cpf" readonly />
+          </div>
+          <div class="c-form__group">
+            <label class="c-form__label">Data de Nascimento</label>
+            <input type="date" class="c-form__input"
+              [value]="formBirthDateString()" (change)="updateField('birthDate', $any($event.target).value)" />
+          </div>
+        </div>
+
+        <div class="c-form__group">
+          <label class="c-form__label">Endereço de E-mail</label>
+          <input type="email" class="c-form__input"
+            [value]="form().email" (input)="updateField('email', $any($event.target).value)" required />
+        </div>
+
+        <hr class="profile__divider" />
+        <h3 class="profile__section-title">Alterar Senha</h3>
+
+        <div class="c-form__row">
+          <div class="c-form__group">
+            <label class="c-form__label">Nova Senha</label>
+            <input type="password" class="c-form__input" placeholder="••••••••"
+              [value]="form().password" (input)="updateField('password', $any($event.target).value)" />
+          </div>
+          <div class="c-form__group">
+            <label class="c-form__label">Confirmar Nova Senha</label>
+            <input type="password" class="c-form__input" placeholder="••••••••"
+              [value]="form().confirmPassword" (input)="updateField('confirmPassword', $any($event.target).value)" />
+          </div>
+        </div>
+
+        <div class="c-form__actions">
+          <a routerLink="/user/catalog" class="c-btn c-btn--secondary">Cancelar</a>
+          <button type="submit" class="c-btn c-btn--primary" [disabled]="isSaving()">
+            {{ isSaving() ? 'Salvando...' : 'Salvar Alterações' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</main>

@@ -1,0 +1,32 @@
+<div class="c-modal c-modal--open">
+  <div class="c-modal__dialog">
+    <button type="button" class="c-modal__close" (click)="closed.emit()">&times;</button>
+    <h2 class="c-modal__title">Detalhes do Livro</h2>
+    <div class="c-modal__body">
+      <h3 class="u-text-primary-color" style="margin-top: 0;">{{ book().title }}</h3>
+      <p><strong>Autor:</strong> {{ book().author }}</p>
+      <p><strong>Editora:</strong> {{ book().publisher }}</p>
+      <p><strong>Ano:</strong> {{ book().year }}</p>
+      <p><strong>ISBN:</strong> {{ book().isbn }}</p>
+      @if (book().genres.length) {
+        <p>
+          <strong>Gêneros:</strong>
+          @for (g of book().genres; track g.id) {
+            <span class="c-badge c-badge--muted" style="margin-left: 0.25rem;">{{ g.name }}</span>
+          }
+        </p>
+      }
+
+      <div class="c-modal__meta">
+        <div><strong>ISBN:</strong> {{ book().isbn }}</div>
+        <div><strong>Edição:</strong> {{ book().edition }}</div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem;">
+        <span class="c-badge c-badge--success">Disponível para Empréstimo</span>
+        <button class="c-btn c-btn--secondary" (click)="closed.emit()">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="c-modal__backdrop" (click)="closed.emit()"></div>
