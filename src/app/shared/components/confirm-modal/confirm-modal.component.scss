@@ -1,0 +1,28 @@
+.c-modal {
+  &--open {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+
+  &__icon {
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: center;
+
+    svg {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+}

@@ -17,7 +17,7 @@ export class UserService {
   }
 
   findById(userId: number): Observable<UserInfoResponse> {
-    return this.http.get<UserInfoResponse>(this.getBookUrlById(userId));
+    return this.http.get<UserInfoResponse>(this.getUserUrlById(userId));
   }
 
   save(dto: UserCreateRequest): Observable<UserCreateResponse> {
@@ -25,14 +25,14 @@ export class UserService {
   }
 
   update(dto: UserUpdateRequest, userId: number): Observable<void> {
-    return this.http.patch<void>(this.getBookUrlById(userId), dto);
+    return this.http.patch<void>(this.getUserUrlById(userId), dto);
   }
 
   delete(userId: number): Observable<void> {
-    return this.http.delete<void>(this.getBookUrlById(userId));
+    return this.http.delete<void>(this.getUserUrlById(userId));
   }
 
-  private getBookUrlById(id: number): string {
+  private getUserUrlById(id: number): string {
     return `${this.baseUrl}/${id}`;
   }
 }

@@ -1,0 +1,33 @@
+<div class="c-modal c-modal--open">
+  <div class="c-modal__dialog">
+    <button type="button" class="c-modal__close" (click)="cancelled.emit()">
+      &times;
+    </button>
+    <h2 class="c-modal__title" [style.color]="titleColor()">{{ title() }}</h2>
+    <div class="c-modal__body u-text-center">
+
+      <div class="c-modal__icon" [style.color]="iconColor()">
+        <svg fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="iconPath()" />
+        </svg>
+      </div>
+
+      <p class="u-font-bold" style="font-size: 1.05rem; margin-bottom: 0.4rem;">{{ message() }}</p>
+      @if (detail()) {
+        <p class="u-text-muted" style="font-size: 0.85rem; margin-bottom: 1.5rem;">{{ detail() }}</p>
+      }
+
+      <div class="c-form__actions" style="justify-content: center;">
+        <button type="button" class="c-btn c-btn--secondary" (click)="cancelled.emit()">
+          {{ cancelLabel() }}
+        </button>
+        <button type="button" [class]="confirmBtnClass()" (click)="confirmed.emit()">
+          {{ confirmLabel() }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="c-modal__backdrop" (click)="cancelled.emit()"></div>

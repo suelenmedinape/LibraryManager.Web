@@ -1,8 +1,8 @@
 export enum LoanStatus {
-  BORROWED = "Borrowed",
-  RENEWED = "Renewed",
-  RETURNED = "Returned",
-  OVERDUE = "Overdue",
-  LOST = "Lost",
-  CANCELLED = "Cancelled",
+  BORROWED = "BORROWED",
+  RENEWED = "RENEWED",
+  RETURNED = "RETURNED",
+  OVERDUE = "OVERDUE",
+  LOST = "LOST",
+  CANCELLED = "CANCELLED",
 }

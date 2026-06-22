@@ -17,7 +17,7 @@ export class LoansService {
   }
 
   findById(loanId: number): Observable<LoanInfoResponse> {
-    return this.http.get<LoanInfoResponse>(this.getGenreUrlById(loanId));
+    return this.http.get<LoanInfoResponse>(this.getLoanUrlById(loanId));
   }
 
   findMyHistory(): Observable<LoanHistoryResponse[]> {
@@ -29,22 +29,22 @@ export class LoansService {
   }
 
   renew(loanId: number): Observable<void> {
-    return this.http.patch<void>(`${this.getGenreUrlById(loanId)}/renew`, {});
+    return this.http.patch<void>(`${this.getLoanUrlById(loanId)}/renew`, {});
   }
 
   finalize(loanId: number, dto: LoanReturnRequest): Observable<void> {
-    return this.http.patch<void>(`${this.getGenreUrlById(loanId)}/return`, dto);
+    return this.http.patch<void>(`${this.getLoanUrlById(loanId)}/return`, dto);
   }
 
   lost(loanId: number): Observable<void> {
-    return this.http.patch<void>(`${this.getGenreUrlById(loanId)}/lost`, {});
+    return this.http.patch<void>(`${this.getLoanUrlById(loanId)}/lost`, {});
   }
 
   cancel(loanId: number): Observable<void> {
-    return this.http.patch<void>(`${this.getGenreUrlById(loanId)}/cancel`, {});
+    return this.http.patch<void>(`${this.getLoanUrlById(loanId)}/cancel`, {});
   }
 
-  private getGenreUrlById(id: number): string {
+  private getLoanUrlById(id: number): string {
     return `${this.baseUrl}/${id}`;
   }
 }
