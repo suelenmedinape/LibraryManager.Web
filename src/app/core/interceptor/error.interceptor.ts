@@ -16,7 +16,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       let errorMessage = "An unexpected error occurred";
       const timestamp = new Date().toISOString();
 
-      if (environment.production) {
+      if (!environment.production) {
         console.error(
           `[${timestamp}] [HTTP Error] [${req.method}] ${req.url} - Status: ${error.status} ${error.message}`,
           error,
@@ -32,7 +32,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           toastr.warning("Sessão expirada", { description: errorMessage });
         }
  
-        router.navigate(["/"]);
+        router.navigate(["/login"]);
       } else if (error.status === 403) {
         errorMessage = "You do not have permission to access this page.";
         router.navigate(["/"]);

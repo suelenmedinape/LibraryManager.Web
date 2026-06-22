@@ -1,6 +1,5 @@
 import { Routes } from "@angular/router";
-import { AdminLayoutComponent } from "./layout/admin-layout/admin-layout.component";
-import { adminGuard, authGuard } from "@/core/auth/guards/auth-guard";
+import { NotFoundComponent } from "./features/not-found/not-found.component";
 
 export const routes: Routes = [
   {
@@ -15,16 +14,12 @@ export const routes: Routes = [
   },
   {
     path: "admin",
-    component: AdminLayoutComponent,
-    canActivate: [authGuard, adminGuard],
-    children: [
-      {
-        path: "home",
-        loadComponent: () =>
-          import("@/features/admin/pages/admin-home/admin-home.component").then(
-            (a) => a.AdminHomeComponent,
-          ),
-      },
-    ],
+    loadChildren: () => import("@/features/admin/admin.routes").then((r) => r.adminRoutes),
   },
+  {
+    path: "user",
+    loadChildren: () => import("@/features/user/user.routes").then((r) => r.userRoutes),
+  },
+  { path: "404", component: NotFoundComponent },
+  { path: "**", redirectTo: "404" },
 ];
