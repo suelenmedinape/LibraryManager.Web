@@ -1,0 +1,162 @@
+<app-header title="Balcão de Atendimento" />
+
+<main class="l-app__content">
+
+  <!-- Filtros e Ação -->
+  <section class="l-split l-split--wrap">
+    <div class="c-filter-group" style="margin-bottom: 0;">
+      <input type="text" class="c-filter-group__input" placeholder="Pesquisar por leitor ou livro..."
+        [value]="searchValue()" (input)="searchValue.set($any($event.target).value)" />
+      <select class="c-filter-group__select" [value]="statusFilter()"
+        (change)="statusFilter.set($any($event.target).value)">
+        <option value="">Todos os Status</option>
+        <option [value]="LoanStatus.BORROWED">Ativo</option>
+        <option [value]="LoanStatus.OVERDUE">Atrasado</option>
+        <option [value]="LoanStatus.RENEWED">Renovado</option>
+        <option [value]="LoanStatus.RETURNED">Devolvido</option>
+        <option [value]="LoanStatus.LOST">Perdido</option>
+        <option [value]="LoanStatus.CANCELLED">Cancelado</option>
+      </select>
+    </div>
+    <button class="c-btn c-btn--primary" (click)="showNewModal.set(true)">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="width: 1rem; height: 1rem;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      Novo Empréstimo
+    </button>
+  </section>
+
+  <!-- Tabela -->
+  <div class="c-table-responsive">
+    <table class="c-table">
+      <thead class="c-table__head">
+        <tr>
+          <th>Leitor</th>
+          <th>Livro</th>
+          <th>Data Retirada</th>
+          <th>Data Limite</th>
+          <th>Status</th>
+          <th class="u-text-center" style="width: 280px;">Ações de Atendimento</th>
+        </tr>
+      </thead>
+      @if (loans.isLoading()) {
+        <tbody>
+          <tr>
+            <td colspan="6" style="position: relative; height: 200px;">
+              <app-loading [relative]="true" />
+            </td>
+          </tr>
+        </tbody>
+      } @else {
+        <tbody>
+          @for (loan of filteredLoans(); track loan.id) {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-font-bold">{{ loan.user.fullName }}</td>
+              <td class="c-table__cell">{{ loan.book.title }}</td>
+              <td class="c-table__cell">{{ loan.borrowedAt | date: 'dd/MM/yyyy' }}</td>
+              <td class="c-table__cell">{{ loan.dueAt | date: 'dd/MM/yyyy' }}</td>
+              <td class="c-table__cell">
+                <span [class]="loan.status | loanStatusBadge">{{ loan.status | loanStatusLabel }}</span>
+              </td>
+              <td class="c-table__cell c-table__cell--actions u-text-center">
+                @if (canRenewOrReturn(loan)) {
+                  <button class="c-btn c-btn--secondary c-btn--sm" (click)="openAction(loan, 'renew')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                      style="width: 0.9rem; height: 0.9rem;">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3-3-3-3" />
+                    </svg>
+                    Renovar
+                  </button>
+                  <button class="c-btn c-btn--outline c-btn--sm" (click)="openAction(loan, 'return')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                      style="width: 0.9rem; height: 0.9rem;">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    Devolver
+                  </button>
+                  <button class="c-btn c-btn--danger c-btn--sm" (click)="openAction(loan, 'lost')">
+                    Perda
+                  </button>
+                } @else if (loan.status === LoanStatus.BORROWED) {
+                  <button class="c-btn c-btn--ghost c-btn--sm" (click)="openAction(loan, 'cancel')">
+                    Cancelar
+                  </button>
+                } @else {
+                  <span class="u-text-muted" style="font-size: 0.85rem;">
+                    {{ loan.returnedAt ? 'Concluído em ' + (loan.returnedAt | date: 'dd/MM/yy') : 'Encerrado' }}
+                  </span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-text-center" colspan="6">Nenhum empréstimo encontrado.</td>
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+  </div>
+
+</main>
+
+<!-- Modal: Novo Empréstimo -->
+@if (showNewModal()) {
+  <div class="c-modal c-modal--open">
+    <div class="c-modal__dialog">
+      <button type="button" class="c-modal__close" (click)="showNewModal.set(false)">&times;</button>
+      <h2 class="c-modal__title">Registrar Saída de Livro</h2>
+      <div class="c-modal__body">
+        <form class="c-form" (ngSubmit)="saveNewLoan()">
+          <div class="c-form__group">
+            <label class="c-form__label">Leitor / Usuário</label>
+            <select class="c-form__select" [value]="newUserId()"
+              (change)="newUserId.set(+$any($event.target).value || null)">
+              <option value="">Selecione o leitor cadastrado</option>
+              @for (user of users.value() ?? []; track user.id) {
+                <option [value]="user.id">{{ user.fullName }} ({{ user.email }})</option>
+              }
+            </select>
+          </div>
+          <div class="c-form__group">
+            <label class="c-form__label">Livro a ser Emprestado</label>
+            <select class="c-form__select" [value]="newBookId()"
+              (change)="newBookId.set(+$any($event.target).value || null)">
+              <option value="">Selecione o livro disponível no acervo</option>
+              @for (book of books.value() ?? []; track book.id) {
+                <option [value]="book.id">{{ book.title }} — {{ book.author }}</option>
+              }
+            </select>
+          </div>
+          <div class="c-form__group">
+            <label class="c-form__label">Data Limite de Devolução</label>
+            <input type="date" class="c-form__input"
+              [value]="newDueDate()" (change)="newDueDate.set($any($event.target).value)" />
+            <small class="u-text-muted" style="margin-top: 0.25rem; display: block;">
+              Prazo sugerido de 14 dias calculado automaticamente.
+            </small>
+          </div>
+          <div class="c-form__actions">
+            <button type="button" class="c-btn c-btn--secondary" (click)="showNewModal.set(false)">Cancelar</button>
+            <button type="submit" class="c-btn c-btn--primary">Confirmar Saída</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="c-modal__backdrop" (click)="showNewModal.set(false)"></div>
+}
+
+<!-- Modal: Confirmar Ação (reutilizável — renew/return/lost/cancel) -->
+@if (showConfirmModal()) {
+  <app-confirm-modal
+    [title]="confirmModalTitle()"
+    [message]="confirmModalMessage()"
+    [variant]="confirmModalVariant()"
+    confirmLabel="Confirmar"
+    (confirmed)="executeAction()"
+    (cancelled)="showConfirmModal.set(false)"
+  />
+}

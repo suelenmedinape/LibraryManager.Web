@@ -1,0 +1,130 @@
+<app-header title="Gerenciamento de Gêneros" />
+
+<main class="l-app__content">
+
+  <!-- Cabeçalho de Ações -->
+  <section class="l-split">
+    <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0;">Categorias Literárias</h2>
+    <button class="c-btn c-btn--primary" (click)="showAddModal.set(true)">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
+        style="width: 1rem; height: 1rem;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      Novo Gênero
+    </button>
+  </section>
+
+  <!-- Tabela -->
+  <div class="c-table-responsive" style="max-width: 800px; margin: 1.5rem 0;">
+    <table class="c-table">
+      <thead class="c-table__head">
+        <tr>
+          <th style="width: 80px;">ID</th>
+          <th>Nome da Categoria</th>
+          <th class="u-text-center" style="width: 220px;">Ações</th>
+        </tr>
+      </thead>
+      @if (genres.isLoading()) {
+        <tbody>
+          <tr>
+            <td colspan="3" style="position: relative; height: 200px;">
+              <app-loading [relative]="true" />
+            </td>
+          </tr>
+        </tbody>
+      } @else {
+        <tbody>
+          @for (genre of genres.value(); track genre.id) {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-text-muted">#{{ genre.id }}</td>
+              <td class="c-table__cell u-font-bold">{{ genre.name }}</td>
+              <td class="c-table__cell c-table__cell--actions u-text-center">
+                <button class="c-btn c-btn--secondary c-btn--sm" (click)="openEdit(genre)">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    style="width: 0.9rem; height: 0.9rem;">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Editar
+                </button>
+                <button class="c-btn c-btn--danger c-btn--sm" (click)="openDelete(genre)">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    style="width: 0.9rem; height: 0.9rem;">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-text-center" colspan="3">Nenhum gênero cadastrado.</td>
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+  </div>
+
+</main>
+
+<!-- Modal: Adicionar Gênero -->
+@if (showAddModal()) {
+  <div class="c-modal c-modal--open">
+    <div class="c-modal__dialog" style="max-width: 450px;">
+      <button type="button" class="c-modal__close" (click)="showAddModal.set(false)">&times;</button>
+      <h2 class="c-modal__title">Adicionar Novo Gênero</h2>
+      <div class="c-modal__body">
+        <form class="c-form" (ngSubmit)="saveNew()">
+          <div class="c-form__group">
+            <label class="c-form__label">Nome do Gênero</label>
+            <input type="text" class="c-form__input" placeholder="Ex: Suspense, Biografia..."
+              [value]="newGenreName()" (input)="newGenreName.set($any($event.target).value)" />
+          </div>
+          <div class="c-form__actions">
+            <button type="button" class="c-btn c-btn--secondary" (click)="showAddModal.set(false)">Cancelar</button>
+            <button type="submit" class="c-btn c-btn--primary">Salvar Categoria</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="c-modal__backdrop" (click)="showAddModal.set(false)"></div>
+}
+
+<!-- Modal: Editar Gênero -->
+@if (showEditModal()) {
+  <div class="c-modal c-modal--open">
+    <div class="c-modal__dialog" style="max-width: 450px;">
+      <button type="button" class="c-modal__close" (click)="showEditModal.set(false)">&times;</button>
+      <h2 class="c-modal__title">Editar Gênero</h2>
+      <div class="c-modal__body">
+        <form class="c-form" (ngSubmit)="saveEdit()">
+          <div class="c-form__group">
+            <label class="c-form__label">Nome do Gênero</label>
+            <input type="text" class="c-form__input"
+              [value]="editGenreName()" (input)="editGenreName.set($any($event.target).value)" />
+          </div>
+          <div class="c-form__actions">
+            <button type="button" class="c-btn c-btn--secondary" (click)="showEditModal.set(false)">Cancelar</button>
+            <button type="submit" class="c-btn c-btn--primary">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="c-modal__backdrop" (click)="showEditModal.set(false)"></div>
+}
+
+<!-- Modal: Confirmar Exclusão (usando ConfirmModalComponent reutilizável) -->
+@if (showDeleteModal()) {
+  <app-confirm-modal
+    title="Excluir Gênero"
+    [message]="'Tem certeza que deseja excluir o gênero &quot;' + selectedGenre()?.name + '&quot;?'"
+    detail="Esta ação impedirá novas classificações sob este gênero, mas manterá os livros existentes."
+    confirmLabel="Confirmar Exclusão"
+    (confirmed)="confirmDelete()"
+    (cancelled)="showDeleteModal.set(false)"
+  />
+}

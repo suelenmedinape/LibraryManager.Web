@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { RouterOutlet, RouterLink, RouterLinkActive } from "@angular/router";
+import { AuthService } from "@/core/auth/services/auth.service";
 
 @Component({
   selector: "app-admin-layout",
@@ -165,8 +166,8 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from "@angular/router";
           </ul>
 
           <div class="c-nav__footer">
-            <div class="u-font-bold">{{ userName }}</div>
-            <div class="u-text-muted" style="font-size: 0.8rem;">{{ userEmail }}</div>
+            <div class="u-font-bold">{{ userName() }}</div>
+            <div class="u-text-muted" style="font-size: 0.8rem;">{{ userEmail() }}</div>
           </div>
         </nav>
       </aside>
@@ -177,6 +178,12 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from "@angular/router";
   styleUrl: "../styles/layout.scss",
 })
 export class AdminLayoutComponent {
-  userName: string = "Admin Ativo";
-  userEmail: string = "admin@bibliotech.com";
+  private readonly authService = inject(AuthService);
+
+  readonly userEmail = computed(() => this.authService.decodedToken()?.sub ?? "admin@bibliotech.com");
+  readonly userName = computed(() => {
+    const email = this.userEmail();
+    const prefix = email.split("@")[0];
+    return prefix.charAt(0).toUpperCase() + prefix.slice(1);
+  });
 }

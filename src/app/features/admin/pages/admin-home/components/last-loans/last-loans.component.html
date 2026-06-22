@@ -17,7 +17,7 @@
             <td class="c-table__cell">{{ loan.book.title }}</td>
             <td class="c-table__cell">{{ loan.borrowedAt | date:'dd/MM/yyyy' }}</td>
             <td class="c-table__cell">
-              <span [class]="'c-badge ' + badgeClass(loan.status)">{{ statusLabel(loan.status) }}</span>
+              <span [class]="loan.status | loanStatusBadge">{{ loan.status | loanStatusLabel }}</span>
             </td>
           </tr>
         } @empty {

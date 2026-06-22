@@ -1,0 +1,77 @@
+<app-header title="Gerenciamento de Livros" />
+
+<main class="l-app__content">
+  <section class="l-split l-split--wrap">
+    <div class="c-filter-group" style="margin-bottom: 0;">
+      <select class="c-filter-group__select" [value]="searchField()"
+        (change)="searchField.set($any($event.target).value); searchValue.set('')">
+        <option [value]="SearchField.TITLE">Título</option>
+        <option [value]="SearchField.AUTHOR">Autor</option>
+        <option [value]="SearchField.ISBN">ISBN</option>
+      </select>
+
+      <input type="text" class="c-filter-group__input" [placeholder]="placeholder()" [value]="searchValue()"
+        (input)="searchValue.set($any($event.target).value)" />
+
+      <select class="c-filter-group__select" [value]="genreFilter()"
+        (change)="genreFilter.set($any($event.target).value)">
+        <option value="">Todos os Gêneros</option>
+        @for (genre of genres(); track genre.id) {
+        <option [value]="genre.name">{{ genre.name }}</option>
+        }
+      </select>
+
+      @if (searchValue() || genreFilter()) {
+      <button class="c-btn c-btn--ghost" (click)="clear()">Limpar</button>
+      }
+    </div>
+
+    <button class="c-btn c-btn--primary" (click)="openAdd()">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        style="width: 1rem; height: 1rem; margin-right: 0.25rem;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Novo Livro
+    </button>
+  </section>
+
+  <app-table-books
+    [data]="books.value()"
+    [isLoading]="books.isLoading()"
+    (edit)="openEdit($event)"
+    (delete)="openDelete($event)"
+  />
+</main>
+
+<!-- Modal: Adicionar Novo Livro -->
+@if (showAddModal()) {
+  <app-book-modal
+    title="Adicionar Novo Livro"
+    [genres]="genres()"
+    (save)="saveNewBook($event)"
+    (close)="showAddModal.set(false)"
+  />
+}
+
+<!-- Modal: Editar Livro -->
+@if (showEditModal()) {
+  <app-book-modal
+    title="Editar Livro"
+    [book]="selectedBook()"
+    [genres]="genres()"
+    (save)="saveEditBook($event)"
+    (close)="showEditModal.set(false)"
+  />
+}
+
+<!-- Modal: Confirmar Exclusão -->
+@if (showDeleteModal()) {
+  <app-confirm-modal
+    title="Excluir Livro"
+    [message]="'Tem certeza que deseja excluir o livro &quot;' + selectedBook()?.title + '&quot;?'"
+    detail="Esta ação é permanente e removerá o livro físico do acervo da biblioteca."
+    confirmLabel="Confirmar Exclusão"
+    (confirmed)="confirmDeleteBook()"
+    (cancelled)="showDeleteModal.set(false)"
+  />
+}

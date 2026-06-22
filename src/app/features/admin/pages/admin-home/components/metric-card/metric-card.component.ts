@@ -1,4 +1,4 @@
-import { Dashboard } from "@/features/admin/interfaces/dashboard.interface";
+import { Dashboard } from "@/shared/models/dashboard.interface";
 import { Component, input } from "@angular/core";
 
 @Component({

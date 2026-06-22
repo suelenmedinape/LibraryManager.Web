@@ -1,0 +1,210 @@
+<app-header title="Gerenciamento de Leitores" />
+
+<main class="l-app__content">
+
+  <!-- Filtros e Ação -->
+  <section class="l-split l-split--wrap">
+    <div class="c-filter-group" style="margin-bottom: 0;">
+      <input type="text" class="c-filter-group__input" placeholder="Pesquisar por nome ou e-mail..."
+        [value]="searchValue()" (input)="searchValue.set($any($event.target).value)" />
+      <select class="c-filter-group__select" [value]="roleFilter()"
+        (change)="roleFilter.set($any($event.target).value)">
+        <option value="">Todos os Níveis</option>
+        <option [value]="UserRole.USER">Leitor Comum</option>
+        <option [value]="UserRole.ADMIN">Administrador</option>
+      </select>
+    </div>
+    <button class="c-btn c-btn--primary" (click)="showAddModal.set(true)">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="width: 1rem; height: 1rem;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      Novo Usuário
+    </button>
+  </section>
+
+  <!-- Tabela -->
+  <div class="c-table-responsive">
+    <table class="c-table">
+      <thead class="c-table__head">
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>E-mail</th>
+          <th>Nível</th>
+          <th class="u-text-center" style="width: 200px;">Ações</th>
+        </tr>
+      </thead>
+      @if (users.isLoading()) {
+        <tbody>
+          <tr>
+            <td colspan="5" style="position: relative; height: 200px;">
+              <app-loading [relative]="true" />
+            </td>
+          </tr>
+        </tbody>
+      } @else {
+        <tbody>
+          @for (user of users.value(); track user.id) {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-font-bold">{{ user.fullName }}</td>
+              <td class="c-table__cell">{{ user.cpf }}</td>
+              <td class="c-table__cell">{{ user.email }}</td>
+              <td class="c-table__cell">
+                <span [appRoleBadge]="user.role"></span>
+              </td>
+              <td class="c-table__cell c-table__cell--actions u-text-center">
+                <button class="c-btn c-btn--secondary c-btn--sm" (click)="openEdit(user)">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    style="width: 0.9rem; height: 0.9rem;">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Editar
+                </button>
+                <button class="c-btn c-btn--danger c-btn--sm" (click)="openDelete(user)">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    style="width: 0.9rem; height: 0.9rem;">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="c-table__row">
+              <td class="c-table__cell u-text-center" colspan="5">Nenhum usuário encontrado.</td>
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+  </div>
+
+</main>
+
+<!-- Modal: Novo Usuário -->
+@if (showAddModal()) {
+  <div class="c-modal c-modal--open">
+    <div class="c-modal__dialog">
+      <button type="button" class="c-modal__close" (click)="showAddModal.set(false)">&times;</button>
+      <h2 class="c-modal__title">Cadastrar Novo Usuário</h2>
+      <div class="c-modal__body">
+        <form class="c-form" (ngSubmit)="saveNew()">
+          <div class="c-form__group">
+            <label class="c-form__label">Nome Completo</label>
+            <input type="text" class="c-form__input" placeholder="Ex: Lucas de Oliveira"
+              [value]="newForm().fullName" (input)="updateNewField('fullName', $any($event.target).value)" />
+          </div>
+          <div class="c-form__row">
+            <div class="c-form__group">
+              <label class="c-form__label">CPF</label>
+              <input type="text" class="c-form__input" placeholder="000.000.000-00"
+                [value]="newForm().cpf" (input)="updateNewField('cpf', $any($event.target).value)" />
+            </div>
+            <div class="c-form__group">
+              <label class="c-form__label">Data de Nascimento</label>
+              <input type="date" class="c-form__input"
+                [value]="newForm().birthDate" (change)="updateNewField('birthDate', $any($event.target).value)" />
+            </div>
+          </div>
+          <div class="c-form__row">
+            <div class="c-form__group">
+              <label class="c-form__label">E-mail</label>
+              <input type="email" class="c-form__input" placeholder="email@exemplo.com"
+                [value]="newForm().email" (input)="updateNewField('email', $any($event.target).value)" />
+            </div>
+            <div class="c-form__group">
+              <label class="c-form__label">Nível de Acesso</label>
+              <select class="c-form__select" [value]="newForm().role"
+                (change)="updateNewField('role', $any($event.target).value)">
+                <option [value]="UserRole.USER">Leitor Comum</option>
+                <option [value]="UserRole.ADMIN">Administrador</option>
+              </select>
+            </div>
+          </div>
+          <div class="c-form__row">
+            <div class="c-form__group">
+              <label class="c-form__label">Senha</label>
+              <input type="password" class="c-form__input" placeholder="••••••••"
+                [value]="newForm().password" (input)="updateNewField('password', $any($event.target).value)" />
+            </div>
+            <div class="c-form__group">
+              <label class="c-form__label">Confirmar Senha</label>
+              <input type="password" class="c-form__input" placeholder="••••••••"
+                [value]="newForm().passwordConfirm" (input)="updateNewField('passwordConfirm', $any($event.target).value)" />
+            </div>
+          </div>
+          <div class="c-form__actions">
+            <button type="button" class="c-btn c-btn--secondary" (click)="showAddModal.set(false)">Cancelar</button>
+            <button type="submit" class="c-btn c-btn--primary">Salvar Cadastro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="c-modal__backdrop" (click)="showAddModal.set(false)"></div>
+}
+
+<!-- Modal: Editar Usuário -->
+@if (showEditModal()) {
+  <div class="c-modal c-modal--open">
+    <div class="c-modal__dialog">
+      <button type="button" class="c-modal__close" (click)="showEditModal.set(false)">&times;</button>
+      <h2 class="c-modal__title">Editar Usuário</h2>
+      <div class="c-modal__body">
+        <form class="c-form" (ngSubmit)="saveEdit()">
+          <div class="c-form__group">
+            <label class="c-form__label">Nome Completo</label>
+            <input type="text" class="c-form__input"
+              [value]="editForm().fullName" (input)="updateEditField('fullName', $any($event.target).value)" />
+          </div>
+          <div class="c-form__row">
+            <div class="c-form__group">
+              <label class="c-form__label">CPF</label>
+              <input type="text" class="c-form__input" [value]="selectedUser()?.cpf" readonly
+                style="background-color: var(--bg-secondary); cursor: not-allowed;" />
+            </div>
+            <div class="c-form__group">
+              <label class="c-form__label">Data de Nascimento</label>
+              <input type="date" class="c-form__input"
+                [value]="editForm().birthDate" (change)="updateEditField('birthDate', $any($event.target).value)" />
+            </div>
+          </div>
+          <div class="c-form__row">
+            <div class="c-form__group">
+              <label class="c-form__label">E-mail</label>
+              <input type="email" class="c-form__input"
+                [value]="editForm().email" (input)="updateEditField('email', $any($event.target).value)" />
+            </div>
+            <div class="c-form__group">
+              <label class="c-form__label">Nível de Acesso</label>
+              <select class="c-form__select" [value]="editForm().role"
+                (change)="updateEditField('role', $any($event.target).value)">
+                <option [value]="UserRole.USER">Leitor Comum</option>
+                <option [value]="UserRole.ADMIN">Administrador</option>
+              </select>
+            </div>
+          </div>
+          <div class="c-form__actions">
+            <button type="button" class="c-btn c-btn--secondary" (click)="showEditModal.set(false)">Cancelar</button>
+            <button type="submit" class="c-btn c-btn--primary">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="c-modal__backdrop" (click)="showEditModal.set(false)"></div>
+}
+
+<!-- Modal: Confirmar Exclusão -->
+@if (showDeleteModal()) {
+  <app-confirm-modal
+    title="Remover Usuário"
+    [message]="'Deseja remover o usuário &quot;' + selectedUser()?.fullName + '&quot; do sistema?'"
+    detail="Esta ação é permanente. O histórico de empréstimos associado será mantido."
+    confirmLabel="Sim, Remover"
+    (confirmed)="confirmDelete()"
+    (cancelled)="showDeleteModal.set(false)"
+  />
+}
