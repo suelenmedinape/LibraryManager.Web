@@ -1,10 +1,11 @@
-import { computed, effect, inject, Injectable } from "@angular/core";
+import { computed, inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "@/env/environment";
 import { Observable, tap } from "rxjs";
 import { TokenStorageService } from "@/core/auth/services/token-storage.service";
 import { Auth, AuthResponse } from "@/core/auth/models/auth.interface";
 import { Router } from "@angular/router";
+import { UserRole } from "@/shared/enums/user-role";
 
 @Injectable({
   providedIn: "root",
@@ -19,20 +20,14 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.user$() !== null);
   readonly isRoleUser = this.tokenService.role$;
 
-  constructor() {
-    effect(() => {
-      if (!this.isAuthenticated()) {
-        this.router.navigate(["/login"]);
-      }
-    });
-  }
+  constructor() {}
 
   login(dto: Auth): Observable<AuthResponse> {
     const response = this.http.post<AuthResponse>(`${this.baseUrl}/login`, dto).pipe(
       tap((response) => {
         const expiresAt = new Date(Date.now() + response.expiresIn * 1000);
         this.tokenService.saveCookie(response, expiresAt);
-        this.redirectUser();
+        this.router.navigate([this.redirectUser()]);
       }),
     );
 
@@ -41,12 +36,12 @@ export class AuthService {
 
   redirectUser(): string {
     switch (this.isRoleUser()) {
-      case "ADMIN USER":
+      case UserRole.ADMIN:
         return "/admin/home";
-      case "USER":
-        return "/";
+      case UserRole.USER:
+        return "/user/catalog";
       default:
-        return "/";
+        return "/login";
     }
   }
 

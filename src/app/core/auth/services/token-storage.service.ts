@@ -1,6 +1,6 @@
 import { AuthResponse, TokenFormat } from "@/core/auth/models/auth.interface";
 import { environment } from "@/env/environment";
-import { inject, Injectable, signal } from "@angular/core";
+import { computed, inject, Injectable, signal } from "@angular/core";
 import { jwtDecode } from "jwt-decode";
 import { CookieService } from "ngx-cookie-service";
 
@@ -12,31 +12,28 @@ export class TokenStorageService {
   private readonly key = environment.keyToken;
 
   readonly user$ = signal<AuthResponse | null>(this.getUser());
-  readonly role$ = signal<string | null>(this.getRole());
+  readonly role$ = computed(() => {
+    const user = this.user$();
+    if (!user) return null;
+    const decoded = this.decodedToken(user);
+    return decoded?.scope ?? null;
+  });
 
   saveCookie(user: AuthResponse, exp: Date) {
     this.user$.set(user);
-    this.cookieService.set(this.key, JSON.stringify(user), { expires: exp });
+    this.cookieService.set(this.key, JSON.stringify(user), {
+      expires: exp,
+      secure: true,
+      sameSite: "Strict",
+    });
   }
 
   getUser(): AuthResponse | null {
     const raw = this.cookieService.get(this.key);
     if (!raw) return null;
-    
+
     try {
       return JSON.parse(raw) as AuthResponse;
-    } catch {
-      return null;
-    }
-  }
-
-  getRole(): string | null {
-    const raw = this.cookieService.get(this.key);
-    if (!raw) return null;
-    try {
-      const user = JSON.parse(raw) as AuthResponse;
-      const decoded = this.decodedToken(user);
-      return decoded?.scope ?? null;
     } catch {
       return null;
     }

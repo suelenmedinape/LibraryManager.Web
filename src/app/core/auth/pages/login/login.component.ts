@@ -4,7 +4,6 @@ import { DefaultError } from "@/shared/models/errors.interface";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject, signal } from "@angular/core";
 import { form, required, submit, FormField } from "@angular/forms/signals";
-import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { GooeyToastService } from "ngx-gooey-toast";
 
@@ -34,13 +33,12 @@ export class LoginComponent {
       action: async (field) => {
         this.authService.login(field().value()).subscribe({
           next: () => {
-            const id = this.toastr.info("Successfully logged in.");
+            const id = this.toastr.loading('Signing in...')
             this.toastr.update(id, { title: "Successfully logged in.", type: "success" });
-            this.router.navigate([this.authService.redirectUser()]);
           },
           error: (error: HttpErrorResponse) => {
             const erro = error.error as DefaultError;
-            const id = this.toastr.info(erro.message);
+            const id = this.toastr.loading(erro.message);
             this.toastr.update(id, { title: erro.message, type: "error" });
           },
         });

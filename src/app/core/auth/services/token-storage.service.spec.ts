@@ -62,25 +62,25 @@ describe("TokenStorageService", () => {
     });
   });
 
-  // ─── getRole ──────────────────────────────────────────────────────────────
+  // ─── role$ computed signal ────────────────────────────────────────────────
 
-  describe("getRole()", () => {
+  describe("role$", () => {
     it("retorna null quando não há cookie", () => {
       cookieSpy.get.mockReturnValue("");
-      expect(service.getRole()).toBeNull();
+      service = TestBed.inject(TokenStorageService);
+      expect(service.role$()).toBeNull();
     });
 
-    // ⚠️ Este teste vai FALHAR no código atual.
-    // getRole() retorna user.accessToken em vez do scope decodificado.
-    // Corrija getRole() para: return this.decodedToken(user)?.scope ?? null;
     it("retorna a role (scope) decodificada do JWT", () => {
       cookieSpy.get.mockReturnValue(JSON.stringify(MOCK_USER));
-      expect(service.getRole()).toBe("Admin");
+      service = TestBed.inject(TokenStorageService);
+      expect(service.role$()).toBe("Admin");
     });
 
     it("retorna null quando o cookie contém JSON inválido", () => {
       cookieSpy.get.mockReturnValue("invalido");
-      expect(service.getRole()).toBeNull();
+      service = TestBed.inject(TokenStorageService);
+      expect(service.role$()).toBeNull();
     });
   });
 
@@ -93,6 +93,8 @@ describe("TokenStorageService", () => {
 
       expect(cookieSpy.set).toHaveBeenCalledWith(expect.any(String), JSON.stringify(MOCK_USER), {
         expires: exp,
+        secure: true,
+        sameSite: "Strict",
       });
     });
 

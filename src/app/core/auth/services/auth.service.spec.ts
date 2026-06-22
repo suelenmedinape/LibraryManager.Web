@@ -7,6 +7,7 @@ import { AuthService } from "./auth.service";
 import { TokenStorageService } from "./token-storage.service";
 import { environment } from "@/env/environment";
 import { Auth, AuthResponse } from "@/core/auth/models/auth.interface";
+import { UserRole } from "@/shared/enums/user-role";
 
 describe("AuthService", () => {
   let service: AuthService;
@@ -80,8 +81,8 @@ describe("AuthService", () => {
     });
 
     it("deve expor o role$ como isRoleUser", () => {
-      mockRoleSignal.set("ADMIN USER");
-      expect(service.isRoleUser()).toBe("ADMIN USER");
+      mockRoleSignal.set(UserRole.ADMIN);
+      expect(service.isRoleUser()).toBe(UserRole.ADMIN);
     });
   });
 
@@ -111,21 +112,21 @@ describe("AuthService", () => {
 
   describe("redirectUser()", () => {
     it("deve retornar '/admin/home' se o usuário for ADMIN USER", () => {
-      mockRoleSignal.set("ADMIN USER");
+      mockRoleSignal.set(UserRole.ADMIN);
       expect(service.redirectUser()).toBe("/admin/home");
     });
 
-    it("deve retornar '/' se o usuário for USER", () => {
-      mockRoleSignal.set("USER");
-      expect(service.redirectUser()).toBe("/");
+    it("deve retornar '/user/catalog' se o usuário for USER", () => {
+      mockRoleSignal.set(UserRole.USER);
+      expect(service.redirectUser()).toBe("/user/catalog");
     });
 
-    it("deve retornar '/' por padrão se for outra role ou null", () => {
+    it("deve retornar '/login' por padrão se for outra role ou null", () => {
       mockRoleSignal.set("UNKNOWN");
-      expect(service.redirectUser()).toBe("/");
+      expect(service.redirectUser()).toBe("/login");
 
       mockRoleSignal.set(null);
-      expect(service.redirectUser()).toBe("/");
+      expect(service.redirectUser()).toBe("/login");
     });
   });
 

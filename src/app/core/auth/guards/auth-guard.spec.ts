@@ -3,7 +3,8 @@ import { TestBed } from "@angular/core/testing";
 import { CanActivateFn, Router } from "@angular/router";
 import { GooeyToastService } from "ngx-gooey-toast";
 import { AuthService } from "@/core/auth/services/auth.service";
-import { authGuard, adminGuard } from "@/core/auth/guards/auth-guard";
+import { authGuard, adminGuard, userGuard } from "@/core/auth/guards/auth-guard";
+import { UserRole } from "@/shared/enums/user-role";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -65,9 +66,9 @@ describe("authGuard", () => {
       expect(runGuard(authGuard)).toBe(false);
     });
 
-    it("redireciona para /", () => {
+    it("redireciona para /login", () => {
       runGuard(authGuard);
-      expect(router.navigate).toHaveBeenCalledWith(["/"]);
+      expect(router.navigate).toHaveBeenCalledWith(["/login"]);
     });
   });
 });
@@ -89,7 +90,7 @@ describe("adminGuard", () => {
         providers: [
           {
             provide: AuthService,
-            useValue: mockAuthService({ isAuthenticated: true, role: "ADMIN USER" }),
+            useValue: mockAuthService({ isAuthenticated: true, role: UserRole.ADMIN }),
           },
           { provide: Router, useValue: router },
           { provide: GooeyToastService, useValue: toastr },
@@ -118,7 +119,7 @@ describe("adminGuard", () => {
         providers: [
           {
             provide: AuthService,
-            useValue: mockAuthService({ isAuthenticated: true, role: "User", redirectUrl: "/" }),
+            useValue: mockAuthService({ isAuthenticated: true, role: UserRole.USER, redirectUrl: "/" }),
           },
           { provide: Router, useValue: router },
           { provide: GooeyToastService, useValue: toastr },
@@ -167,6 +168,97 @@ describe("adminGuard", () => {
 
     it("redireciona para /login via redirectUser()", () => {
       runGuard(adminGuard);
+      expect(router.navigate).toHaveBeenCalledWith(["/login"]);
+    });
+  });
+});
+
+// ─── userGuard ──────────────────────────────────────────────────────────────
+
+describe("userGuard", () => {
+  let router: { navigate: ReturnType<typeof vi.fn> };
+  let toastr: { warning: ReturnType<typeof vi.fn> };
+
+  beforeEach(() => {
+    router = { navigate: vi.fn() };
+    toastr = { warning: vi.fn() };
+  });
+
+  describe("usuário com role User (Leitor)", () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: AuthService,
+            useValue: mockAuthService({ isAuthenticated: true, role: UserRole.USER }),
+          },
+          { provide: Router, useValue: router },
+          { provide: GooeyToastService, useValue: toastr },
+        ],
+      });
+    });
+
+    it("permite a navegação (retorna true)", () => {
+      expect(runGuard(userGuard)).toBe(true);
+    });
+
+    it("não redireciona", () => {
+      runGuard(userGuard);
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("usuário com role Admin", () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: AuthService,
+            useValue: mockAuthService({ isAuthenticated: true, role: UserRole.ADMIN }),
+          },
+          { provide: Router, useValue: router },
+          { provide: GooeyToastService, useValue: toastr },
+        ],
+      });
+    });
+
+    it("bloqueia a navegação (retorna false)", () => {
+      expect(runGuard(userGuard)).toBe(false);
+    });
+
+    it("exibe toast de aviso de que admins devem usar o painel admin", () => {
+      runGuard(userGuard);
+      expect(toastr.warning).toHaveBeenCalledWith("Atenção!", {
+        description: "Administradores devem usar o painel admin",
+      });
+    });
+
+    it("redireciona para /admin/home", () => {
+      runGuard(userGuard);
+      expect(router.navigate).toHaveBeenCalledWith(["/admin/home"]);
+    });
+  });
+
+  describe("usuário não autenticado", () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: AuthService,
+            useValue: mockAuthService({ isAuthenticated: false, role: null }),
+          },
+          { provide: Router, useValue: router },
+          { provide: GooeyToastService, useValue: toastr },
+        ],
+      });
+    });
+
+    it("bloqueia a navegação (retorna false)", () => {
+      expect(runGuard(userGuard)).toBe(false);
+    });
+
+    it("redireciona para /login", () => {
+      runGuard(userGuard);
       expect(router.navigate).toHaveBeenCalledWith(["/login"]);
     });
   });
