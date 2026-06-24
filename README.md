@@ -18,8 +18,6 @@ O **LibraryManager** é a interface web de um robusto sistema para gerenciamento
 
 ## 📸 Telas do Sistema
 
-> *Adicione aqui as imagens/screenshots reais do sistema substituindo as tags abaixo.*
-
 <div align="center">
   <!-- Exemplo de como colocar as imagens: <img src="./docs/login.png" width="400" /> -->
   <img src="./readme/login-page.png" width="400" alt="Tela de Login" />
